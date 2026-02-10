@@ -125,23 +125,40 @@ button {
   opacity: 0.8;
 }
 
-.socials {
-  margin-top: 10px;
+#contact-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  margin: 20px auto;
 }
 
-.socials a {
-  color: white;
-  text-decoration: none;
-  margin: 0 8px;
+#contact-form input,
+#contact-form textarea {
+  margin-bottom: 12px;
+  padding: 10px;
   font-size: 14px;
 }
 
-.socials a:hover {
-  text-decoration: underline;
+#contact-form button {
+  padding: 12px;
+  background-color: #333;
+  color: white;
+  border: none;
+  cursor: pointer;
 }
 
-.socials i {
-  font-size: 22px;
-  margin: 0 6px;
+#contact-form button:hover {
+  background-color: #555;
+}
+
+.contact-socials {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.contact-socials a {
+  margin: 0 8px;
+  font-size: 24px;
   color: white;
 }
+

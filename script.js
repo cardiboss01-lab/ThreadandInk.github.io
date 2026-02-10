@@ -87,3 +87,56 @@ paypal.Buttons({
     }
 }).render('#paypal-button-container');
 
+// 1. Grab all Add to Cart buttons
+const cartButtons = document.querySelectorAll('.add-to-cart');
+
+cartButtons.forEach(button => {
+  button.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    // 2. Get product data
+    const name = button.dataset.name;
+    const price = parseFloat(button.dataset.price);
+    const size = button.dataset.size || '';
+    const color = button.dataset.color || '';
+
+    // 3. Get current cart from localStorage or create new
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // 4. Add product to cart
+    cart.push({ name, price, size, color, quantity: 1 });
+
+    // 5. Save back to localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    alert(`${name} added to cart!`);
+  });
+});
+
+function displayCart() {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const tbody = document.querySelector('#cart-table tbody');
+  tbody.innerHTML = '';
+
+  let total = 0;
+
+  cart.forEach((item, index) => {
+    total += item.price * item.quantity;
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${item.name}</td>
+      <td>${item.size}</td>
+      <td>${item.color}</td>
+      <td>R${item.price}</td>
+      <td>${item.quantity}</td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  document.getElementById('total').textContent = `Total: R${total}`;
+}
+
+// Run displayCart only if cart-table exists
+if (document.querySelector('#cart-table')) {
+  displayCart();
+}
