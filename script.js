@@ -1,142 +1,102 @@
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
+// ===== THREAD & INK CART SYSTEM =====
+document.addEventListener('DOMContentLoaded', () => {
 
-function addToCart(name, price) {
-  cart.push({ name, price });
-  localStorage.setItem("cart", JSON.stringify(cart));
-  alert(name + " added to cart 🧶");
-}
+  // -------- ADD ITEMS TO CART --------
+  document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
 
-function loadCart() {
-  const cartItems = document.getElementById("cartItems");
-  const total = document.getElementById("total");
+      // Grab product info from data attributes
+      const name = this.dataset.name;
+      const price = parseFloat(this.dataset.price);
 
-  if (!cartItems) return;
+      // Grab optional size and color from sibling selects (if they exist)
+      const parent = this.closest('.product'); // assumes button is inside a product div
+      let size = parent ? parent.querySelector('.size-select')?.value || '' : '';
+      let color = parent ? parent.querySelector('.color-select')?.value || '' : '';
 
-  cartItems.innerHTML = "";
-  let sum = 0;
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-  cart.forEach(item => {
-    const li = document.createElement("li");
-    li.textContent = `${item.name} — $${item.price}`;
-    cartItems.appendChild(li);
-    sum += item.price;
+      // Check if exact item already exists (same name, size, color)
+      const existingIndex = cart.findIndex(item =>
+        item.name === name &&
+        item.size === size &&
+        item.color === color
+      );
+
+      if (existingIndex !== -1) {
+        cart[existingIndex].qty += 1; // increase qty
+      } else {
+        cart.push({
+          name: name,
+          price: price,
+          size: size,
+          color: color,
+          qty: 1
+        });
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      alert(`${name} added to cart 🛍️`);
+    });
   });
 
-  total.textContent = "Total: $" + sum;
-}
+  // -------- DISPLAY CART ON CART PAGE --------
+  const cartTableBody = document.querySelector('#cart-table tbody');
+  const totalDisplay = document.getElementById('total');
 
-function checkout() {
-  alert("Thank you for supporting handmade art 💛");
-  localStorage.removeItem("cart");
-  window.location.reload();
-}
+  function loadCart() {
+    if (!cartTableBody) return;
 
-loadCart();
-
-function getTotal() {
-  return cart.reduce((sum, item) => sum + item.price, 0);
-}
-
-if (document.getElementById("paypal-button-container")) {
-  paypal.Buttons({
-    createOrder: function (data, actions) {
-      return actions.order.create({
-        purchase_units: [{
-          amount: {
-            value: getTotal().toFixed(2)
-          }
-        }]
-      });
-    },
-    onApprove: function (data, actions) {
-      return actions.order.capture().then(function () {
-        alert("Payment successful! Thank you for supporting handmade art 💛");
-        localStorage.removeItem("cart");
-        window.location.href = "index.html";
-      });
-    }
-  }).render("#paypal-button-container");
-}
-
-const customForm = document.getElementById("customForm");
-
-if (customForm) {
-  customForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    alert(
-      "Thank you! Your custom request has been sent 💛\nI’ll be in touch via email soon."
-    );
-    customForm.reset();
-  });
-}
-paypal.Buttons({
-    createOrder: function(data, actions) {
-        return actions.order.create({
-            purchase_units: [{
-                amount: {
-                    value: "200"   // later we’ll replace with cart total
-                }
-            }]
-        });
-    },
-
-    onApprove: function(data, actions) {
-        return actions.order.capture().then(function(details) {
-            alert("Payment successful! Thanks " + details.payer.name.given_name);
-        });
-    }
-}).render('#paypal-button-container');
-
-// 1. Grab all Add to Cart buttons
-const cartButtons = document.querySelectorAll('.add-to-cart');
-
-cartButtons.forEach(button => {
-  button.addEventListener('click', (e) => {
-    e.preventDefault();
-
-    // 2. Get product data
-    const name = button.dataset.name;
-    const price = parseFloat(button.dataset.price);
-    const size = button.dataset.size || '';
-    const color = button.dataset.color || '';
-
-    // 3. Get current cart from localStorage or create new
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cartTableBody.innerHTML = '';
+    let total = 0;
 
-    // 4. Add product to cart
-    cart.push({ name, price, size, color, quantity: 1 });
+    cart.forEach((item, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${item.name}</td>
+        <td>${item.size}</td>
+        <td>${item.color}</td>
+        <td>${item.price}</td>
+        <td>
+          <input type="number" min="1" value="${item.qty}" class="qty-input" data-index="${index}">
+        </td>
+        <td>
+          <button class="remove-item" data-index="${index}">X</button>
+        </td>
+      `;
+      cartTableBody.appendChild(row);
 
-    // 5. Save back to localStorage
-    localStorage.setItem('cart', JSON.stringify(cart));
+      total += item.price * item.qty;
+    });
 
-    alert(`${name} added to cart!`);
-  });
+    if (totalDisplay) totalDisplay.innerText = `Total: R${total}`;
+
+    // -------- QUANTITY CHANGE --------
+    document.querySelectorAll('.qty-input').forEach(input => {
+      input.addEventListener('change', function() {
+        const idx = parseInt(this.dataset.index);
+        let qty = parseInt(this.value);
+        if (qty < 1) qty = 1;
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart[idx].qty = qty;
+        localStorage.setItem('cart', JSON.stringify(cart));
+        loadCart(); // refresh totals
+      });
+    });
+
+    // -------- REMOVE ITEM --------
+    document.querySelectorAll('.remove-item').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const idx = parseInt(this.dataset.index);
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart.splice(idx, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        loadCart();
+      });
+    });
+  }
+
+  loadCart();
 });
-
-function displayCart() {
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  const tbody = document.querySelector('#cart-table tbody');
-  tbody.innerHTML = '';
-
-  let total = 0;
-
-  cart.forEach((item, index) => {
-    total += item.price * item.quantity;
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${item.name}</td>
-      <td>${item.size}</td>
-      <td>${item.color}</td>
-      <td>R${item.price}</td>
-      <td>${item.quantity}</td>
-    `;
-    tbody.appendChild(row);
-  });
-
-  document.getElementById('total').textContent = `Total: R${total}`;
-}
-
-// Run displayCart only if cart-table exists
-if (document.querySelector('#cart-table')) {
-  displayCart();
-}
