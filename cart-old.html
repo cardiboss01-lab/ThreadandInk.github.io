@@ -2,11 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Your Cart | Thread & Ink</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart</title>
   <link rel="stylesheet" href="style.css">
+
   <link rel="stylesheet" href="css/all.min.css">
-  <script src="cart.js" defer></script>
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
+
+
 </head>
 <body>
 
@@ -15,32 +18,35 @@
   <nav>
     <a href="shop.html">Continue Shopping</a>
     <a href="custom.html">Custom Orders</a>
+
   </nav>
+  
 </header>
 
 <main>
-  <h2>Your Cart</h2>
+    <h2>Your Cart</h2>
+    <table id="cart-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Size</th>
+          <th>Color</th>
+          <th>Price (R)</th>
+          <th>Quantity</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <p id="total"></p>
+    
+ <div class="checkout-section">
+  <button id="checkout-btn" class="checkout-btn">
+    Proceed to Checkout
+    
+  </button>
+</div>
 
-  <table id="cart-table">
-    <thead>
-      <tr>
-        <th>Product</th>
-        <th>Size</th>
-        <th>Color</th>
-        <th>Price (R)</th>
-        <th>Quantity</th>
-        <th>Remove</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <p id="total"></p>
-
-  <div class="checkout-section">
-    <button id="checkout-btn" class="checkout-btn">Proceed to Checkout</button>
-  </div>
-</main>
+  </main>
 
 <footer>
   <p>© 2026 Thread & Ink</p>
@@ -50,11 +56,12 @@
     <a href="custom.html">Custom Orders</a>
   </p>
 
-  <div class="socials">
+<div class="socials">
     <a href="http://instagram.com/thread_and_ink_store"><i class="fa-brands fa-instagram"></i></a>
     <a href="#"><i class="fa-brands fa-tiktok"></i></a>
     <a href="mailto:thread.and.ink.store@gmail.com" target="_blank"><i class="fa-solid fa-envelope"></i></a>
   </div>
+
 </footer>
 
 </body>

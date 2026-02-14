@@ -1,5 +1,19 @@
 // ===== THREAD & INK CART SYSTEM =====
 document.addEventListener('DOMContentLoaded', () => {
+  // -------- SHOW TOTAL ON CHECKOUT PAGE --------
+const checkoutTotal = document.getElementById('checkout-total');
+
+if (checkoutTotal) {
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  let total = 0;
+
+  cart.forEach(item => {
+    total += item.price * item.qty;
+  });
+
+  checkoutTotal.innerText = "Total: R" + total;
+}
+
 
   // -------- ADD ITEMS TO CART --------
   document.querySelectorAll('.add-to-cart').forEach(button => {
@@ -100,3 +114,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadCart();
 });
+
+// -------- CHECKOUT BUTTON --------
+const checkoutBtn = document.getElementById('checkout-btn');
+
+if (checkoutBtn) {
+  checkoutBtn.addEventListener('click', function() {
+
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    if (cart.length === 0) {
+      alert("Your cart is empty 🛍️");
+      return;
+    }
+
+    window.location.href = "checkout.html";
+  });
+}
+
+// -------- PLACE ORDER --------
+const checkoutForm = document.getElementById('checkout-form');
+
+if (checkoutForm) {
+  checkoutForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    if (cart.length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
+
+    alert("Order placed successfully! 💜 We will contact you soon.");
+
+    // Clear cart
+    localStorage.removeItem('cart');
+
+    // Redirect to home
+    window.location.href = "index.html";
+  });
+}

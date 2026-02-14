@@ -256,3 +256,36 @@ footer .socials a {
 footer .socials a:hover {
   color: #ff6347;
 }
+
+.checkout-page {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.checkout-page form {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkout-page input,
+.checkout-page textarea {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.checkout-page textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.checkout-page button {
+  background: #111;
+  color: white;
+  padding: 12px;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+}

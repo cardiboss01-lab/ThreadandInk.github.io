@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout | Thread & Ink</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+<header>
+  <h1>Thread & Ink</h1>
+</header>
+
+<main class="checkout-page">
+  <h2>Checkout</h2>
+
+  <div class="order-summary">
+    <h3>Order Summary</h3>
+    <p id="checkout-total"></p>
+  </div>
+
+  <form id="checkout-form">
+    <label>Full Name</label>
+    <input type="text" required>
+
+    <label>Email</label>
+    <input type="email" required>
+
+    <label>Phone Number</label>
+    <input type="tel" required>
+
+    <label>Delivery Address</label>
+    <textarea required></textarea>
+
+    <button type="submit" class="checkout-btn">
+      Place Order
+    </button>
+  </form>
+  <main>
+  <h2>Checkout</h2>
+  <p id="checkout-total"></p>
+
+  <h3>Select Payment Method</h3>
+  <div>
+    <label>
+      <input type="radio" name="payment" value="paypal" checked> PayPal
+    </label>
+    <label>
+      <input type="radio" name="payment" value="eft"> EFT
+    </label>
+  </div>
+
+  <!-- PayPal button container -->
+  <div id="paypal-button-container"></div>
+</main>
+
+</main>
+<!-- PayPal SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=AUHl1mjG2aiss-IXY5mAtSsEW5caESJGSQqLnhjVLrm8hTfQnEEs7yhbYJLt4C2oK1ZUwFtHbyee6OFw&currency=ZAR"></script>
+
+<script src="checkout.js" defer></script>
+
+</body>
+</html>
